@@ -28,10 +28,10 @@ $DOCKER_COMMAND -it -d\
     $DOCKER_NETWORK_ARGS \
     $ADDITIONAL_COMMANDS \
     --privileged \
-    -v "$PWD" \
+    -v "$PWD/" \
     -v /var/run/docker.sock:/var/run/docker.sock \
-    --name=ivansin-dk \
-    ivansin:dk-dnn \
+    --name=ivansin \
+    model-maker \
     bash
 
-cat << EOF	
+#cat << EOF	

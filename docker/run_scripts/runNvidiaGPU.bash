@@ -27,19 +27,19 @@ HAS_NVIDIA_DOCKER=$?
 if [ $HAS_NVIDIA_TOOLKIT -eq 0 ]; then
   docker_version=`docker version --format '{{.Client.Version}}' | cut -d. -f1`
   if [ $docker_version -ge 19 ]; then
-	  DOCKER_COMMAND="docker run --gpus all"
+	  DOCKER_COMMAND="docker run --gpus all -v $(pwd):/app"
   else
-	  DOCKER_COMMAND="docker run --runtime=nvidia"
+	  DOCKER_COMMAND="docker run --runtime=nvidia -v $(pwd):/app"
   fi
 elif [ $HAS_NVIDIA_DOCKER -eq 0 ]; then
-  DOCKER_COMMAND="nvidia-docker run"
+  DOCKER_COMMAND="nvidia-docker run -v $(pwd):/app"
 else
   echo "Running without nvidia-docker, if you have an NVidia card you may need it"\
   "to have GPU acceleration"
-  DOCKER_COMMAND="docker run"
+  DOCKER_COMMAND="docker run -v $(pwd):/app"
 fi
 
-ADDITIONAL_COMMANDS="--volume $PWD"
+#ADDITIONAL_COMMANDS="--volume $PWD/"
 
 xhost +
 
@@ -50,10 +50,8 @@ $DOCKER_COMMAND -it -d\
   $DOCKER_NETWORK_ARGS \
   $ADDITIONAL_COMMANDS \
   --privileged \
-  -v "$PWD" \
+  -v "$PWD/" \
   -v /var/run/docker.sock:/var/run/docker.sock \
   --name=ivansin-dk \
-  ivansin:dk-dnn \
+  model-maker \
   bash
-
-cat << EOF	
